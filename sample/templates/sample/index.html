@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="col-lg-6 offset-lg-3">
+
+    {% if user.is_authenticated %}
+        <h1>ユーザ名</h1>
+        <p class="user-name">{{ user.username }} でログイン中です。</p>
+    {% endif %}
+
+    <h1>Post List</h1>
+
+    <section class="post-list">
+        <ul>
+            {% for post in object_list %}
+            <li>
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th width="35%">作品タイトル</th>
+                            <td width="65%">{{ post.title }}</td>
+                        </tr>
+                        <tr>
+                            <th>内容</th>
+                            <td>{{ post.text }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </li>
+            {% empty %}
+            <li class="no-post">
+                <p>記事が存在しません。</p>
+            {% endfor %}
+        </ul>
+    </section>
+</div>
+
+{% endblock %}
