@@ -2,6 +2,7 @@ import logging
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import generic
 from .models import Post
+from .forms import TestForm
 from django.db.models import Q
 
 logger = logging.getLogger('development')
@@ -9,35 +10,37 @@ logger = logging.getLogger('development')
 
 class IndexView(LoginRequiredMixin, generic.ListView):
 
-    # paginate_by = 3
+    paginate_by = 3
     template_name = 'sample/index.html'
     model = Post
 
-    # def get(self, request, *args, **kwargs):
-    #     self.object = None
-    #     return generic.ListView.get(self, request, *args, **kwargs)
-    #
-    # def post(self, request, *args, **kwargs):
-    #     self.object = None
-    #     self.form = self.get_form(self.form_class)
-    #
-    #     logger.debug("test = " + self.request.POST.get('title', None))
-    #
-    #     form_value = [
-    #         self.request.POST.get('title', None),
-    #         self.request.POST.get('authorName', None),
-    #         self.request.POST.get('material', None),
-    #         self.request.POST.get('start_date', None),
-    #         self.request.POST.get('end_date', None),
-    #     ]
-    #     request.session['form_value'] = form_value
-    #
-    #     # Whether the form validates or not, the view will be rendered by get()
-    #     return self.get(request, *args, **kwargs)
-    #
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     return context
+    def get(self, request, *args, **kwargs):
+
+        if self.request.GET.get('title', None):
+            logger.debug("request.GET.get() = " + self.request.GET.get('title', None))
+
+        if self.request.GET.getlist('title', None):
+            logger.debug("request.GET.getlist() = " + self.request.GET.getlist('title', None)[0])
+
+        return generic.ListView.get(self, request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+
+        if self.request.POST.get('title', None):
+            logger.debug("self.request.POST.get() = " + self.request.POST.get('title', None))
+
+        if self.request.POST.getlist('title', None):
+            logger.debug("self.request.POST.getlist() = " + self.request.POST.getlist('title', None)[0])
+
+        return self.get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        test_form = TestForm() # フォーム
+        context['test_form'] = test_form
+
+        return context
 
     def get_queryset(self):
 

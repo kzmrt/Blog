@@ -8,6 +8,25 @@
         <p class="user-name">{{ user.username }} でログイン中です。</p>
     {% endif %}
 
+     <h1>フォーム</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {% for field in test_form %}
+            <div class="form-group form-inline">
+                {{ field.label }} ： {{ field }}
+            </div>
+        {% endfor %}
+        <input class="btn btn-success offset-md-8 col-md-3" type="submit" id="button" name="button" value="送信">
+    </form>
+
+    <form method="post">
+        {% csrf_token %}
+        <input type="textbox" value="1" name="title">
+        <input type="textbox" value="2" name="title">
+        <input type="textbox" value="3" name="title">
+        <input type="submit" id="button" name="button" value="送信">
+    </form>
+
     <h1>Post List</h1>
 
     <section class="post-list">
@@ -17,7 +36,7 @@
                 <table class="table table-bordered">
                     <tbody>
                         <tr>
-                            <th width="35%">作品タイトル</th>
+                            <th width="35%">タイトル</th>
                             <td width="65%">{{ post.title }}</td>
                         </tr>
                         <tr>
@@ -33,6 +52,11 @@
             {% endfor %}
         </ul>
     </section>
+    <div class="col-6 offset-3 justify-content-center">
+        {% if is_paginated %}
+            {% include 'pagination.html' %}
+        {% endif %}
+    </div>
 </div>
 
 {% endblock %}
